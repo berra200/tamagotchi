@@ -4,9 +4,73 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="style.css">
     <title>Tamagotchi</title>
 </head>
 <body>
-    
+    <main>
+        <h5>Skapa ny Tamagotchi</h5>
+        <div>
+            <input id="name" type="text" placeholder="Namn">
+            <select id="type" name="type">
+                <option hidden disabled selected value="">Välj djur</option>
+                <option value="dog">Hund</option>
+                <option value="cat">Katt</option>
+                <option value="rabit">Kanin</option>
+                <option value="chicken">Kyckling</option>
+            </select>
+            <button id="create-new">Skapa</button>
+        </div>
+        <p id="error-msg"></p>
+
+        <br>
+        <div class="wrapper">
+            <div class="list-wrapper">
+                <h5>Mina husdjur</h5>
+                <ul id="pet-list"></ul>
+            </div>
+            <div id="show-pet-wrapper">
+                <span>
+                    <h5 id="pet-name"></h5>
+                    <p id="pet-comment"></p>
+                </span>
+                <div id="show-pet">
+                    <div>
+                        <div id="image-container">
+                            <img id="image" width="200" src="images/tamagotchi.png" alt="Animal avatar">
+                        </div>
+                    </div>
+                    <div id="stats">
+                        <span>
+                            <p>Trött</p>
+                            <p>Pigg</p>
+                        </span>
+                        <progress id="energy" value="100" max="100"></progress>
+                        <span>
+                            <p>Hungrig</p>
+                            <p>Mätt</p>
+                        </span>
+                        <progress id="hunger" value="100" max="100"></progress>
+                        <span>
+                            <p>Bortglömd</p>
+                            <p>Älskad</p>
+                        </span>
+                        <progress id="social" value="100" max="100"></progress>
+                        <span>
+                            <p>Ledsen</p>
+                            <p>Glad</p>
+                        </span>
+                        <progress id="happy" value="100" max="100"></progress>
+                    </div>
+                </div>
+                <div id="pet-buttons">
+                    <button id="feed-btn" disabled>Mata</button>
+                    <button id="play-btn" disabled>Lek</button>
+                    <button id="sleep-btn" disabled>sov</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

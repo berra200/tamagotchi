@@ -1,10 +1,114 @@
 @layer bulma, special-styles;
 
 @layer bulma {
-    @charset "utf-8";
+    // @charset "utf-8";
     @import "./node_modules/bulma/bulma.sass";
 };
 
 @layer special-styles {
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     
+    main {
+        background-color: lightgrey;
+        margin-top: 32px;
+        padding: 16px;
+        border-radius: 16px;
+        border: 1px solid black;
+    }
+
+    .wrapper {
+        display: flex;
+        padding: 8px;
+    }
+    
+    .list-wrapper {
+        // padding: 8px;
+        border: 1px solid black;
+        border-right: 0;
+        border-radius: 8px 0 0 8px;
+
+        h5 {
+            font-weight: 500;
+            padding-left: 10px;
+        }
+
+        li {
+            padding-left: 10px;
+            user-select: none;
+            cursor: pointer;
+        }
+    }
+    
+    #show-pet-wrapper {
+        padding: 8px;
+        border: 1px solid black;
+        border-radius: 0 8px 8px 0;
+
+        span {
+            display: flex;
+
+            #pet-comment {
+                padding-left: 20px;
+                color: rgb(255, 120, 120);
+            }
+        }
+    }
+
+    #pet-list {
+        min-width: 150px;
+    }
+
+    #show-pet {
+        display: flex;
+        align-items: center;
+
+        h5 {
+            height: 16px;
+            font-weight: 500;
+        }
+    }
+
+    #pet-buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    #stats {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #image-container {
+        width: 200px;
+        height: 200px;
+        padding: 16px;
+    }
+
+    #stats span {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    progress {
+        width: 200px;
+    }
+
+    #pet-buttons button {
+        width: 100px;
+    }
+
+    #error-msg {
+        font-size: 12px;
+        color: red;
+    }
+
+    .active {
+        background-color: #5050ff;
+        color: white;
+    }
 };
