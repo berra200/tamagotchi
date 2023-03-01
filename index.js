@@ -1,4 +1,4 @@
-const comment = document.querySelector("#pet-comment")
+let comment = document.querySelector("#pet-comment")
 
 
 class Pet {
@@ -11,17 +11,13 @@ class Pet {
         this.happy = 50
     }
     
-    // Höjer energy med 40
-    // Höjer happy med 10
-    // Sänker hunger med 10
-    // Sänker social med 10
     sleep() {
         if (this.hunger < 10) {
-            comment.innerText = "I'm too hungry too sleep"
+            negativeComment("I'm too hungry too sleep")
         }else if (this.social < 10) {
-            comment.innerText = "I'm too lonely"
+            negativeComment("I'm too lonely")
         } else {
-            comment.innerText = ""
+            positiveComment(`${this.name} tog en tupplur.`)
             this.energy += 40
             this.happy += 10
             this.hunger -= 10
@@ -31,35 +27,29 @@ class Pet {
         }
     }
 
-    // Sänker happy med 30
-    // Sänker hunger med 20
-    // Sänker energy med 20
-    // Höjer social med 10
-    // Energy måste vara Över t.ex 30
     play() {
         if (this.happy < 30) {
-            comment.innerText = "I'm too sad"
+            negativeComment("I'm too sad")
         } else if (this.hunger < 20) {
-            comment.innerText = "I'm too hungry"
+            negativeComment("I'm too hungry")
         } else if (this.energy < 30) {
-            comment.innerText = "I'm too tired too play"
+            negativeComment("I'm too tired too play")
         } else {
-            comment.innerText = ""
-            this.happy -= 30
-            this.hunger -= 20
+            positiveComment(`Du lekte med ${this.name}.`)
+            this.happy += 30
             this.social += 10
+            this.hunger -= 20
+            this.energy -= 20
             checkMinMax(this)
             this.renderStats()
         }
     }
 
-    // Ökar hunger med 60
-    // Sänker energy med 10
     eat() {
         if (this.energy < 10)  {
-            comment.innerText = "I'm too tired to chew"
+            negativeComment("I'm too tired to chew")
         } else {
-            comment.innerText = ""
+            positiveComment(`${this.name} tackar för maten.`)
             this.hunger += 60
             this.energy -= 10
             checkMinMax(this)
@@ -102,6 +92,16 @@ class Pet {
     }
 }
 
+function negativeComment(str) {
+    comment.style.color = "red"
+    comment.innerText = str
+}
+
+function positiveComment(str) {
+    comment.style.color = "black"
+    comment.innerText = str
+}
+
 
 function checkMinMax(obj) {
     obj.energy < 0 && (obj.energy = 0)
@@ -133,11 +133,13 @@ function createPet() {
         let li = document.createElement("li")
         li.innerText = pet.name
         petList.append(li)
+        
+        document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
+        li.classList.add("active")
+        pet.renderPet()
+
         li.addEventListener("click", function() {
-            const oldActive = document.querySelector(".active")
-            if(oldActive !==null){
-                oldActive.classList.remove("active")
-            }
+            document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
             this.classList.add("active")
             pet.renderPet()
         })
