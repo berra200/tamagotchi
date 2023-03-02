@@ -74,19 +74,19 @@ class Pet {
         btnWrapper.innerHTML = ""
 
         let feedBtn = document.createElement("button")
-        feedBtn.classList.add("feed-btn")
+        feedBtn.classList.add("feed-btn", "button")
         feedBtn.innerText = "Mata"
         btnWrapper.append(feedBtn)
         feedBtn.addEventListener("click", () => this.eat())
 
         let playBtn = document.createElement("button")
-        playBtn.classList.add("play-btn")
+        playBtn.classList.add("play-btn", "button")
         playBtn.innerText = "Lek"
         btnWrapper.append(playBtn)
         playBtn.addEventListener("click", () => this.play())
 
         let sleepBtn = document.createElement("button")
-        sleepBtn.classList.add("sleep-btn")
+        sleepBtn.classList.add("sleep-btn", "button")
         sleepBtn.innerText = "Sov"
         btnWrapper.append(sleepBtn)
         sleepBtn.addEventListener("click", () => this.sleep())
