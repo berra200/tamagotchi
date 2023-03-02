@@ -9842,6 +9842,9 @@
     border-radius: 16px;
     border: 1px solid black;
   }
+  .input {
+    max-width: 200px;
+  }
   .wrapper {
     display: flex;
     padding: 8px;
@@ -9856,6 +9859,8 @@
     padding-left: 10px;
   }
   .list-wrapper li {
+    height: 35px;
+    line-height: 35px;
     padding-left: 10px;
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -9913,7 +9918,7 @@
     color: red;
   }
   .active {
-    background-color: #5050ff;
+    background-color: hsl(217, 71%, 53%);
     color: white;
   }
 }/*# sourceMappingURL=style.css.map */

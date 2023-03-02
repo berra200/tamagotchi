@@ -12,15 +12,17 @@
     <main>
         <h5>Skapa ny Tamagotchi</h5>
         <div>
-            <input id="name" type="text" placeholder="Namn">
-            <select id="type" name="type">
-                <option hidden disabled selected value="">Välj djur</option>
-                <option value="dog">Hund</option>
-                <option value="cat">Katt</option>
-                <option value="rabit">Kanin</option>
-                <option value="chicken">Kyckling</option>
-            </select>
-            <button id="create-new">Skapa</button>
+            <input id="name" class="input" type="text" placeholder="Namn">
+            <div class="select">
+                <select id="type" name="type">
+                    <option hidden disabled selected value="">Välj djur</option>
+                    <option value="dog">Hund</option>
+                    <option value="cat">Katt</option>
+                    <option value="rabit">Kanin</option>
+                    <option value="chicken">Kyckling</option>
+                </select>
+            </div>
+            <button id="create-new" class="button">Skapa</button>
         </div>
         <p id="error-msg"></p>
 
@@ -46,28 +48,28 @@
                             <p>Trött</p>
                             <p>Pigg</p>
                         </span>
-                        <progress id="energy" value="100" max="100"></progress>
+                        <progress id="energy" class="progress is-link mb-1" value="100" max="100"></progress>
                         <span>
                             <p>Hungrig</p>
                             <p>Mätt</p>
                         </span>
-                        <progress id="hunger" value="100" max="100"></progress>
+                        <progress id="hunger" class="progress is-link mb-1" value="100" max="100"></progress>
                         <span>
                             <p>Bortglömd</p>
                             <p>Älskad</p>
                         </span>
-                        <progress id="social" value="100" max="100"></progress>
+                        <progress id="social" class="progress is-link mb-1" value="100" max="100"></progress>
                         <span>
                             <p>Ledsen</p>
                             <p>Glad</p>
                         </span>
-                        <progress id="happy" value="100" max="100"></progress>
+                        <progress id="happy" class="progress is-link mb-1" value="100" max="100"></progress>
                     </div>
                 </div>
                 <div id="pet-buttons">
-                    <button id="feed-btn" disabled>Mata</button>
-                    <button id="play-btn" disabled>Lek</button>
-                    <button id="sleep-btn" disabled>sov</button>
+                    <button id="feed-btn" class="button" disabled>Mata</button>
+                    <button id="play-btn" class="button" disabled>Lek</button>
+                    <button id="sleep-btn" class="button" disabled>sov</button>
                 </div>
             </div>
         </div>
