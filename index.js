@@ -1,4 +1,5 @@
 let comment = document.querySelector("#pet-comment")
+const inputText = document.getElementById("input-text")
 let myPets = []
 
 
@@ -63,6 +64,7 @@ class Pet {
         document.getElementById("hunger").value = this.hunger
         document.getElementById("social").value = this.social
         document.getElementById("happy").value = this.happy
+        updateItem(myPets)
     }
 
     renderPet() {
@@ -117,9 +119,10 @@ const renderPetList = () => {
 
 // Api functions
 
-const API_BASE = "https://birgell.se/test-api/"
+const API_BASE = "https://birgell.se/test-api"
 const listID = "63ffcc9abab81b20736b3b89"
-const itemID = ""
+const itemID = "63ffcfbfbab81b20736b3b8b"
+let user
 
 // Create new list
 const createNewList = async (listname) => {
@@ -143,6 +146,8 @@ const createNewItem = (arr) => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            title: `myPets array`,
+            description: `This is a array containing all pets that belong so ${user}`,
             myPets: arr
         }),
     })
@@ -161,7 +166,7 @@ const updateItem = (arr) => {
     })
 }
 
-const getList = async (listID) => {
+const getList = async () => {
     const res = await fetch(`${API_BASE}/lists/${listID}`)
     const data = await res.json()
     data.itemList[0].myPets.forEach(pet => {
@@ -200,8 +205,8 @@ function checkMinMax(obj) {
 
 function createPet() {
     const error = document.getElementById("error-msg")
-    const petName = document.getElementById("name").value
     const petType = document.getElementById("type").value
+    petName = inputText.value
     if (petName === "") {
         error.innerText = "Du måste skriva ett namn!"
     } else if (petType === "") {
@@ -217,8 +222,21 @@ function createPet() {
 
 // Running code
 
-getList(listID)
-document.getElementById("create-new").addEventListener("click", () => createPet())
+document.getElementById("input-btn").addEventListener("click", function() {
+    if (user === undefined) {
+        user = inputText.value
+        getList()
+        
+        inputText.value = ""
+        inputText.placeholder = "Namn på djur"
+        this.innerText = "Skapa nytt"
+
+        document.getElementById("pet-type").classList.remove("is-hidden")
+
+    } else {
+        createPet()
+    }
+})
 
 
 // console.log(myPets)
