@@ -1,14 +1,15 @@
 let comment = document.querySelector("#pet-comment")
+let myPets = []
 
 
 class Pet {
-    constructor(name, type) {
+    constructor(name, type, energy = 50, hunger = 50, social = 50, happy = 50) {
         this.name = name
         this.type = type
-        this.energy = 50
-        this.hunger = 50
-        this.social = 50
-        this.happy = 50
+        this.energy = energy
+        this.hunger = hunger
+        this.social = social
+        this.happy = happy
     }
     
     sleep() {
@@ -92,6 +93,89 @@ class Pet {
     }
 }
 
+const renderPetList = () => {
+    const petList = document.getElementById("pet-list")
+    petList.innerHTML = ""
+    myPets.forEach(pet => {
+        let li = document.createElement("li")
+        li.innerText = pet.name
+        petList.append(li)
+        
+        document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
+        li.classList.add("active")
+        pet.renderPet()
+
+        li.addEventListener("click", function() {
+            document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
+            this.classList.add("active")
+            pet.renderPet()
+        })
+    })
+}
+
+
+
+// Api functions
+
+const API_BASE = "https://birgell.se/test-api/"
+const listID = "63ffcc9abab81b20736b3b89"
+const itemID = ""
+
+// Create new list
+const createNewList = async (listname) => {
+    const res = await fetch(`${API_BASE}lists`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            listname: listname,
+        }),
+    })
+}
+
+
+// Creates items
+const createNewItem = (arr) => {
+    fetch(`${API_BASE}/lists/${listID}/items`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            myPets: arr
+        }),
+    })
+}
+
+// Update items
+const updateItem = (arr) => {
+    fetch(`${API_BASE}/lists/${listID}/items/${itemID}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            myPets: arr
+        }),
+    })
+}
+
+const getList = async (listID) => {
+    const res = await fetch(`${API_BASE}/lists/${listID}`)
+    const data = await res.json()
+    data.itemList[0].myPets.forEach(pet => {
+        myPets.push(new Pet(pet.name, pet.type, pet.energy, pet.hunger, pet.social, pet.happy))
+    })
+    renderPetList()
+}
+
+
+
+
+
+// Game functions
+
 function negativeComment(str) {
     comment.style.color = "red"
     comment.innerText = str
@@ -116,7 +200,6 @@ function checkMinMax(obj) {
 
 function createPet() {
     const error = document.getElementById("error-msg")
-    const petList = document.getElementById("pet-list")
     const petName = document.getElementById("name").value
     const petType = document.getElementById("type").value
     if (petName === "") {
@@ -128,26 +211,15 @@ function createPet() {
         myPets.push(new Pet(petName, petType))
     }
 
-    petList.innerHTML = ""
-    myPets.forEach(pet => {
-        let li = document.createElement("li")
-        li.innerText = pet.name
-        petList.append(li)
-        
-        document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
-        li.classList.add("active")
-        pet.renderPet()
-
-        li.addEventListener("click", function() {
-            document.querySelectorAll(".active").forEach(node => {node.classList.remove("active")})
-            this.classList.add("active")
-            pet.renderPet()
-        })
-    })
+    renderPetList()
 }
 
-let myPets = []
 
+// Running code
+
+getList(listID)
 document.getElementById("create-new").addEventListener("click", () => createPet())
 
+
+// console.log(myPets)
 
