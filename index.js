@@ -160,7 +160,7 @@ const searchUser = async (data) => {
 
     // Check data for existing user
     await data.itemList.forEach((obj) => {
-        if (obj.user === inputText.value){
+        if (obj.user === inputText.value.toLowerCase()){
             user = {
                 user: obj.user,
                 pets: [],
@@ -180,7 +180,7 @@ const searchUser = async (data) => {
             method: "POST", 
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                user: inputText.value,
+                user: inputText.value.toLowerCase(),
                 pets: [],
             }),
             }
@@ -193,20 +193,6 @@ const searchUser = async (data) => {
         }
     }
 
-}
-
-// Creates a new user
-const createNewUser = () => {  
-    fetch(`${API_BASE}/lists/${listID}/items`,
-        {
-        method: "POST", 
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            user: inputText.value,
-            pets: [],
-        }),
-        }
-    )
 }
 
 // Update items
@@ -289,18 +275,3 @@ document.getElementById("input-btn").addEventListener("click",async function() {
         createPet()
     }
 })
-
-
-
-
-
-
-
-//dev delete list with id
-const deleteList = (ID) => {
-    fetch(`${API_BASE}/lists/${ID}`,
-    {
-      method: "DELETE",
-    })
-}
-// deleteList("6400c52fbab81b20736b3ba7")
