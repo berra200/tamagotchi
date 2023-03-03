@@ -10,10 +10,10 @@
 </head>
 <body>
     <main>
-        <h5>Skapa ny Tamagotchi</h5>
+        <h1>Tamagotchi</h1>
         <div>
-            <input id="name" class="input" type="text" placeholder="Namn">
-            <div class="select">
+            <input id="input-text" class="input" type="text" placeholder="Användarnamn">
+            <div id="pet-type" class="select is-hidden">
                 <select id="type" name="type">
                     <option hidden disabled selected value="">Välj djur</option>
                     <option value="dog">Hund</option>
@@ -22,7 +22,7 @@
                     <option value="chicken">Kyckling</option>
                 </select>
             </div>
-            <button id="create-new" class="button">Skapa</button>
+            <button id="input-btn" class="button">Logga in</button>
         </div>
         <p id="error-msg"></p>
 
