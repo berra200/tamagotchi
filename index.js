@@ -1,7 +1,15 @@
+// HTML params
 let comment = document.querySelector("#pet-comment")
 const inputText = document.getElementById("input-text")
-let myPets = []
+const error = document.getElementById("error-msg")
 
+// Game params
+let user
+
+// Api params
+const API_BASE = "https://birgell.se/test-api"
+const appName = "Tamagotchi"
+let listID
 
 class Pet {
     constructor(name, type, energy = 50, hunger = 50, social = 50, happy = 50) {
@@ -64,7 +72,7 @@ class Pet {
         document.getElementById("hunger").value = this.hunger
         document.getElementById("social").value = this.social
         document.getElementById("happy").value = this.happy
-        updateItem(myPets)
+        updateItem()
     }
 
     renderPet() {
@@ -98,7 +106,7 @@ class Pet {
 const renderPetList = () => {
     const petList = document.getElementById("pet-list")
     petList.innerHTML = ""
-    myPets.forEach(pet => {
+    user.pets.forEach(pet => {
         let li = document.createElement("li")
         li.innerText = pet.name
         petList.append(li)
@@ -119,63 +127,100 @@ const renderPetList = () => {
 
 // Api functions
 
-const API_BASE = "https://birgell.se/test-api"
-const listID = "63ffcc9abab81b20736b3b89"
-const itemID = "63ffcfbfbab81b20736b3b8b"
-let user
+// gets or creates new "app list"
+const getList = async () => {
+    let res = await fetch(`${API_BASE}/listsearch?listname=${appName}`)
+    let data = await res.json()
 
-// Create new list
-const createNewList = async (listname) => {
-    const res = await fetch(`${API_BASE}lists`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            listname: listname,
-        }),
-    })
+    // If there are no list created in api the create one
+    if (data.length === 0) {
+        res = await fetch(`${API_BASE}/lists`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                listname: appName,
+            }),
+        })
+        data = await res.json()
+
+        // fetch the new list
+        res = await fetch(`${API_BASE}/listsearch?listname=${appName}`)
+        data = await res.json()
+    }
+
+    return data[0]
 }
 
 
-// Creates items
-const createNewItem = (arr) => {
-    fetch(`${API_BASE}/lists/${listID}/items`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            title: `myPets array`,
-            description: `This is a array containing all pets that belong so ${user}`,
-            myPets: arr
-        }),
+// Search and copy user to local
+const searchUser = async (data) => {
+    let isFound = false
+
+    // Check data for existing user
+    await data.itemList.forEach((obj) => {
+        if (obj.user === inputText.value){
+            user = {
+                user: obj.user,
+                pets: [],
+                _id: obj._id,
+            }
+            obj.pets.forEach(pet => {
+                user.pets.push(new Pet(pet.name, pet.type, pet.energy, pet.hunger, pet.social, pet.happy))
+            })
+            isFound = true
+        }
     })
+
+    // If not found create a new one
+    if (!isFound) {
+        const res = await fetch(`${API_BASE}/lists/${listID}/items`,
+            {
+            method: "POST", 
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                user: inputText.value,
+                pets: [],
+            }),
+            }
+        )
+        const data = await res.json().then(data => data.list.itemList.at(-1))
+        user = {
+            user: data.user,
+            pets: [],
+            _id: data._id,
+        }
+    }
+
+}
+
+// Creates a new user
+const createNewUser = () => {  
+    fetch(`${API_BASE}/lists/${listID}/items`,
+        {
+        method: "POST", 
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            user: inputText.value,
+            pets: [],
+        }),
+        }
+    )
 }
 
 // Update items
-const updateItem = (arr) => {
-    fetch(`${API_BASE}/lists/${listID}/items/${itemID}`, {
+const updateItem = () => {
+    fetch(`${API_BASE}/lists/${listID}/items/${user._id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            myPets: arr
+            pets: user.pets
         }),
     })
 }
-
-const getList = async () => {
-    const res = await fetch(`${API_BASE}/lists/${listID}`)
-    const data = await res.json()
-    data.itemList[0].myPets.forEach(pet => {
-        myPets.push(new Pet(pet.name, pet.type, pet.energy, pet.hunger, pet.social, pet.happy))
-    })
-    renderPetList()
-}
-
-
 
 
 
@@ -204,7 +249,6 @@ function checkMinMax(obj) {
 }
 
 function createPet() {
-    const error = document.getElementById("error-msg")
     const petType = document.getElementById("type").value
     petName = inputText.value
     if (petName === "") {
@@ -213,7 +257,7 @@ function createPet() {
         error.innerText = "Du måste ange djurtyp!"
     } else {
         error.innerText = ""
-        myPets.push(new Pet(petName, petType))
+        user.pets.push(new Pet(petName, petType))
     }
 
     renderPetList()
@@ -222,11 +266,19 @@ function createPet() {
 
 // Running code
 
-document.getElementById("input-btn").addEventListener("click", function() {
-    if (user === undefined) {
-        user = inputText.value
-        getList()
-        
+document.getElementById("input-btn").addEventListener("click",async function() {
+    if (inputText.value === "") {
+        error.innerText = "Du måste fylla i ett användarnamn"
+    } else if (user === undefined) {
+        data = await getList() // Get list
+        listID = data._id // Save list id
+        error.innerText = "" // Remove any error message
+
+        // See if user exist and at the same time save localy
+        await searchUser(data)
+        renderPetList()
+
+
         inputText.value = ""
         inputText.placeholder = "Namn på djur"
         this.innerText = "Skapa nytt"
@@ -239,5 +291,16 @@ document.getElementById("input-btn").addEventListener("click", function() {
 })
 
 
-// console.log(myPets)
 
+
+
+
+
+//dev delete list with id
+const deleteList = (ID) => {
+    fetch(`${API_BASE}/lists/${ID}`,
+    {
+      method: "DELETE",
+    })
+}
+// deleteList("6400c52fbab81b20736b3ba7")
